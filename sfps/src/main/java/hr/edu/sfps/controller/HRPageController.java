@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import hr.edu.sfps.model.Student;
 import hr.edu.sfps.service.StudentService;
@@ -61,6 +62,31 @@ public class HRPageController {
     	
     	model.addAttribute("searchedStudents", resultList);
         return "searchresult"; // This will resolve to result.html Thymeleaf template
+    }
+    
+    @PostMapping("/searchByLastName")
+    public String searchByLastName(@RequestParam("studentLastName") String lastName, Model model) {
+    	
+    	List<Student> resultList = new ArrayList<>();
+    	
+    	if(lastName.length()>2) {
+    		resultList = studentService.getSearchedUsers(lastName);
+    		model.addAttribute("searchedStudents", resultList);
+    	}else {
+    		model.addAttribute("searchedStudents", List.of());
+    	}
+    	
+        return "searchresult";
+    }
+    
+    @GetMapping("/autocomplete")
+    @ResponseBody
+    public List<String> autocomplete(@RequestParam("query") String query) {
+        if (query.length() > 2) {
+            return studentService.getLastNameSuggestions(query);
+        } else {
+            return List.of();
+        }
     }
 	
 

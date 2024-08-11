@@ -9,4 +9,10 @@ import hr.edu.sfps.model.Student;
 public interface StudentRepository extends MongoRepository<Student, String> {
 
 	List<Student> findByNameIgnoreCaseRegex(String name);
+	
+	List<Student> findByLastNameIgnoreCaseRegex(String lastName);
+
+	List<String> findDistinctLastNameByLastNameContainingIgnoreCase(String lastName);
+	
+	
 }

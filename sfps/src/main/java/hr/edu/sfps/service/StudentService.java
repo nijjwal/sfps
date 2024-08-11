@@ -23,5 +23,15 @@ public class StudentService {
 		String regexName = ".*" + name + ".*";
 		return studentRepository.findByNameIgnoreCaseRegex(regexName);
 	}
+	
+	
+	public List<Student> getSearchedUsersByLastName(String lastName){
+		String regexLastName = ".*" + lastName + ".*";
+		return studentRepository.findByLastNameIgnoreCaseRegex(regexLastName);
+	}
+	
+    public List<String> getLastNameSuggestions(String query) {
+        return studentRepository.findDistinctLastNameByLastNameContainingIgnoreCase(query);
+    }
 
 }

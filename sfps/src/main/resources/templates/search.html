@@ -1,13 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Search Student</title>
+	<title>Search Student</title>
+    <style>
+        .autocomplete-suggestions {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            z-index: 1000;
+            background-color: #fff;
+        }
+        .autocomplete-suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-suggestion:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Student</h1>
-    <form th:action="@{/search}" method="post">
-        <input type="text" name="studentName" placeholder="Enter student name" />
+<h1>Search Student</h1>
+    <p>Enter more than 2 characters for searching</p>
+    <form th:action="@{/searchByLastName}" method="post">
+        <input type="text" id="studentLastName" name="studentLastName" placeholder="Enter student's last name" autocomplete="off" />
         <button type="submit">Search</button>
     </form>
+    <div id="suggestions" class="autocomplete-suggestions"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('studentLastName');
+            const suggestionsContainer = document.getElementById('suggestions');
+
+            input.addEventListener('input', function() {
+                const query = input.value;
+
+                if (query.length > 2) {
+                    fetch(`/autocomplete?query=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsContainer.innerHTML = '';
+
+                            data.forEach(suggestion => {
+                                const div = document.createElement('div');
+                                div.className = 'autocomplete-suggestion';
+                                div.textContent = suggestion;
+                                div.addEventListener('click', () => {
+                                    input.value = suggestion;
+                                    suggestionsContainer.innerHTML = '';
+                                });
+                                suggestionsContainer.appendChild(div);
+                            });
+                        })
+                        .catch(error => console.error('Error:', error));
+                } else {
+                    suggestionsContainer.innerHTML = '';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
