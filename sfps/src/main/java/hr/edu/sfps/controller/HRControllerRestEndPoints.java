@@ -16,7 +16,7 @@ import hr.edu.sfps.service.StudentService;
 // ctr+o = auto import
 
 @RestController
-public class HRController {
+public class HRControllerRestEndPoints {
 
 	@Autowired
 	private StudentService studentService;
@@ -25,6 +25,13 @@ public class HRController {
 	public List<Student> helloMethod() {
 		return studentService.getAllUsers();
 	}
+	
+	
+	@GetMapping("demo")
+	public String demo() {
+		return "demo game";
+	}
+	
 	
 
 
